@@ -2,7 +2,7 @@
 #define MOTOR_D2 8
 #define MOTOR_PWM 9
 
-void setSpeed(int speed){
+void setspeed(int speed){
     if(0<=speed && speed<=255){
         digitalWrite(MOTOR_D1,HIGH);
         digitalWrite(MOTOR_D2,LOW);
@@ -22,8 +22,8 @@ void setup(){
 }
 
 void loop(){
-	setSpeed(100);
+	setspeed(100);
  	delay(3000);
-  	setSpeed(-100);
+  	setspeed(-100);
  	delay(3000);
 }
