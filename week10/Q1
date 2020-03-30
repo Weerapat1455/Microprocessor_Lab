@@ -1,1 +1,29 @@
+#define MOTOR_D1 7
+#define MOTOR_D2 8
+#define MOTOR_PWM 9
 
+void setSpeed(int speed){
+    if(0<=speed && speed<=255){
+        digitalWrite(MOTOR_D1,HIGH);
+        digitalWrite(MOTOR_D2,LOW);
+      	analogWrite(MOTOR_PWM,speed);
+    }
+  	else if(-255<=speed && speed<0){
+        digitalWrite(MOTOR_D1,LOW);
+        digitalWrite(MOTOR_D2,HIGH);
+      	analogWrite(MOTOR_PWM,-speed);
+    }
+}
+
+void setup(){
+    pinMode(MOTOR_D1, OUTPUT);
+    pinMode(MOTOR_D2, OUTPUT);
+    pinMode(MOTOR_PWM, OUTPUT);
+}
+
+void loop(){
+	setSpeed(100);
+ 	delay(3000);
+  	setSpeed(-100);
+ 	delay(3000);
+}
