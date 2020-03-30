@@ -1,0 +1,63 @@
+#define MOTOR_D1 7
+#define MOTOR_D2 8
+#define MOTOR_PWM 9
+
+#define ENCODER_A 2
+#define ENCODER_B 3
+
+void setspeed(int speed){
+    if(0<=speed && speed<=255){
+        digitalWrite(MOTOR_D1,HIGH);
+        digitalWrite(MOTOR_D2,LOW);
+      	analogWrite(MOTOR_PWM,speed);
+    }
+  	else if(-255<=speed && speed<0){
+        digitalWrite(MOTOR_D1,LOW);
+        digitalWrite(MOTOR_D2,HIGH);
+      	analogWrite(MOTOR_PWM,-speed);
+    }
+}
+
+bool ENCODER_Ac = false; // Current state
+bool ENCODER_Bc = false; // Current state
+bool ENCODER_Ap = false; // Previous state
+bool ENCODER_Bp = false; // Previous state
+
+int counter = 0;
+
+void ENCODER_Handle(bool isCW){
+    if(isCW) counter++;
+    else counter--;
+    Serial.println("Counter = "+String(counter)+"  Direction : "+(isCW?"CW":"CCW"));
+}
+
+void ENCODER_Check(){ 
+    ENCODER_Ac = !digitalRead(ENCODER_A);
+    ENCODER_Bc = !digitalRead(ENCODER_B);
+    if(ENCODER_Ac && ENCODER_Bc){
+        if(ENCODER_Ap && !ENCODER_Bp) ENCODER_Handle(1);
+        else if(!ENCODER_Ap && ENCODER_Bp) ENCODER_Handle(0);
+    }
+    ENCODER_Ap = ENCODER_Ac;
+    ENCODER_Bp = ENCODER_Bc;
+}
+
+
+void setup(){
+    pinMode(MOTOR_D1, OUTPUT);
+    pinMode(MOTOR_D2, OUTPUT);
+    pinMode(MOTOR_PWM, OUTPUT);
+  	pinMode(ENCODER_A, INPUT_PULLUP);
+    pinMode(ENCODER_B, INPUT_PULLUP);
+ 
+    Serial.begin(9600);
+    attachInterrupt(digitalPinToInterrupt(ENCODER_A), ENCODER_Check, FALLING);
+    attachInterrupt(digitalPinToInterrupt(ENCODER_B), ENCODER_Check, FALLING);
+}
+
+void loop(){
+	setspeed(100);
+ 	delay(100);
+  	setspeed(-100);
+ 	delay(100);
+}
