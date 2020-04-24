@@ -58,6 +58,11 @@ void setSpeed(int speed) { // Motor forward
   }
 }
 
+void setLED(int count){
+  if(count >= 0) digitalWrite(LED,HIGH);
+  else digitalWrite(LED,LOW);
+}
+
 void setLed1(byte data){
   shiftOut(PIN_DATA, PIN_CLK, MSBFIRST, data);
   digitalWrite(PIN_LATCH_1,HIGH);
@@ -75,8 +80,11 @@ void setLed2(byte data){
 }
 
 void write7Segemnt(unsigned char counter){
-  setLed1(map7seg[counter/10]);
-  setLed2(map7seg[counter%10]);
+//  int num=counter/100;
+//  if(num<=99){
+    setLed1(map7seg[counter/10]);
+    setLed2(map7seg[counter%10]);
+//  }
 }
 
 /*void BTN1_callback(){
@@ -115,12 +123,13 @@ void setup(){
   attachInterrupt(digitalPinToInterrupt(BTN2), BTN2_callback, RISING);
 */
   
-  pinMode(LED,OUTPUT); 
+  pinMode(12,OUTPUT); 
   
   pinMode(MOTOR_D1_PIN,OUTPUT); 
   pinMode(MOTOR_D2_PIN,OUTPUT); 
   pinMode(MOTOR_PWM_PIN,OUTPUT);  
   pinMode(interruptChannelAPin, INPUT_PULLUP);
+  pinMode(interruptChannelBPin, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(interruptChannelAPin), 
                   ChannelA_callback, RISING);
   attachInterrupt(digitalPinToInterrupt(interruptChannelBPin), 
@@ -129,6 +138,7 @@ void setup(){
   digitalWrite(MOTOR_D1_PIN,LOW);
   digitalWrite(MOTOR_D2_PIN,HIGH);
   analogWrite(MOTOR_PWM_PIN,255);
+  digitalWrite(12,HIGH);
 }
 
   
@@ -143,6 +153,7 @@ void loop(){
    	Serial.println(speedInput);
   }
   
+  setLED(encoderCount);
   setSpeed(speedInput);
   Serial.print(speedInput);
   Serial.print(":");
@@ -153,7 +164,10 @@ void loop(){
   
 ISR(TIMER1_OVF_vect){
   TCNT1 = TCNT_start;
-  write7Segemnt(encoderCount/100);
+  if(encoderCount>=0) write7Segemnt(encoderCount/100);
+  else write7Segemnt(encoderCount/-100);
+//  write7Segemnt(encoderCount/100);
+  
 //  counter++;
 //  write7Segemnt(counter);
 /*  if(isRunning){
@@ -165,14 +179,14 @@ ISR(TIMER1_OVF_vect){
 void ChannelA_callback() {
   if (digitalRead(interruptChannelAPin)==1 && 
       digitalRead(interruptChannelBPin)==0) {
-  	encoderCount++;
+  	encoderCount--;
   }
 }
 
 void ChannelB_callback() {
   if (digitalRead(interruptChannelAPin)==0 && 
       digitalRead(interruptChannelBPin)==1) {
-  	encoderCount--;
+  	encoderCount++;
   }
 }
 
