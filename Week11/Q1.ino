@@ -27,7 +27,6 @@ volatile int encoderDir = 0;
 
 int speedInput = 1;
 
-
 void moveForward(int speed) {
     digitalWrite(MOTOR_D1_PIN,HIGH);
     digitalWrite(MOTOR_D2_PIN,LOW); 
@@ -39,6 +38,7 @@ void moveBackward(int speed) {
     digitalWrite(MOTOR_D2_PIN,HIGH); 
     analogWrite(MOTOR_PWM_PIN,speed);
 }
+
 void setSpeed(int speed) { // Motor forward
   if (speed > 0) {
     if (speed > 255) {
@@ -58,8 +58,8 @@ void setSpeed(int speed) { // Motor forward
   }
 }
 
-void setLED(int count){
-  if(count >= 0) digitalWrite(LED,HIGH);
+void setLED(){
+  if(encoderCount < 0) digitalWrite(LED,HIGH);
   else digitalWrite(LED,LOW);
 }
 
@@ -123,7 +123,7 @@ void setup(){
   attachInterrupt(digitalPinToInterrupt(BTN2), BTN2_callback, RISING);
 */
   
-  pinMode(12,OUTPUT); 
+  pinMode(LED,OUTPUT); 
   
   pinMode(MOTOR_D1_PIN,OUTPUT); 
   pinMode(MOTOR_D2_PIN,OUTPUT); 
@@ -138,7 +138,6 @@ void setup(){
   digitalWrite(MOTOR_D1_PIN,LOW);
   digitalWrite(MOTOR_D2_PIN,HIGH);
   analogWrite(MOTOR_PWM_PIN,255);
-  digitalWrite(12,HIGH);
 }
 
   
@@ -153,7 +152,7 @@ void loop(){
    	Serial.println(speedInput);
   }
   
-  setLED(encoderCount);
+  setLED();
   setSpeed(speedInput);
   Serial.print(speedInput);
   Serial.print(":");
@@ -189,6 +188,3 @@ void ChannelB_callback() {
   	encoderCount++;
   }
 }
-
-
-
