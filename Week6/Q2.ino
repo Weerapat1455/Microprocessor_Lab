@@ -28,7 +28,7 @@ void printDateTime(const RtcDateTime& dt){
   }
  
 void setup() { 
-  Serial.begin(57600);
+  Serial.begin(9600);
   Rtc.Begin();
   RtcDateTime setting_time(2020,2,24,14,01,10);
   // year, month, dayOfMonth, hour, minute, second
