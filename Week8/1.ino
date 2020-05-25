@@ -1,7 +1,5 @@
-#include <Arduino.h>
-
-#define LED_PIN_1 11
-#define LED_PIN_2 3
+#define LED1 11
+#define LED2 3
 
 float brightness = 0;
 int pin_led, pin_on;
@@ -10,8 +8,8 @@ String buff;
 void setup()
 { 
   Serial.begin(9600);
-  pinMode(LED_PIN_1, OUTPUT);
-  pinMode(LED_PIN_2, OUTPUT);
+  pinMode(LED1, OUTPUT);
+  pinMode(LED2, OUTPUT);
 }
 
 void loop()
