@@ -16,10 +16,6 @@ void loop() {
     digitalWrite(data_pin,toggle);
      
     digitalWrite(clk_pin,HIGH);
-    if(){
-
-       
-    }
     digitalWrite(clk_pin,LOW); 
     toggle = !toggle;
   } 
